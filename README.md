@@ -1,13 +1,15 @@
-# μSpek
-Micro tool for testing with syntax similar to Spek, but shorter. Test different nested scenarios without any boilerplate code.
+# MiniSpek
+Mini tool for testing with syntax similar to Spek, but shorter.
+Test different nested scenarios without any boilerplate code.
+Fork of [μSpek](https://github.com/langara/uspek)
 
 ### Example
 ```kotlin
 
     @Test
-    fun uspekTest() {
+    fun MiniSpekTest() {
     
-        uspek("basic uspek tests") {
+        mspek("basic mini spek tests") {
 
             "create some mutable list" o {
 
@@ -61,8 +63,9 @@ Micro tool for testing with syntax similar to Spek, but shorter. Test different 
     }
    
     dependencies {
-        testImplementation 'com.github.langara:USpek:master-SNAPSHOT'
+        testImplementation 'com.github.elpassion:MiniSpek:master-SNAPSHOT'
     }
 ```
 
-details: https://jitpack.io/#langara/USpek
+details: https://jitpack.io/#elpassion/MiniSpek
+
