@@ -1,7 +1,7 @@
 # MiniSpek
 Mini tool for testing with syntax similar to Spek, but shorter.
 Test different nested scenarios without any boilerplate code.
-Fork of [μSpek](https://github.com/langara/uspek)
+Fork of [μSpek](https://github.com/langara/mspek)
 
 ### Example
 ```kotlin

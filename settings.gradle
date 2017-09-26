@@ -1,1 +1,1 @@
-include ':uspek', ':androsample', 'kotlinsample'
+include ':mspek', ':androsample', 'kotlinsample'

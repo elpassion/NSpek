@@ -27,7 +27,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
-        applicationId "pl.mareklangiewicz.uspek"
+        applicationId "com.elpassion.mspek"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -48,10 +48,10 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
-//    testImplementation project(':uspek')
-//    androidTestImplementation project(':uspek')
-    testImplementation 'com.github.langara:USpek:b89f82be9b'
-    androidTestImplementation 'com.github.langara:USpek:b89f82be9b'
+//    testImplementation project(':mspek')
+//    androidTestImplementation project(':mspek')
+    testImplementation 'com.github.elpassion:MiniSpek:master-SNAPSHOT'
+    androidTestImplementation 'com.github.elpassion:MiniSpek:master-SNAPSHOT'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
