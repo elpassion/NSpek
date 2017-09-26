@@ -1,1 +1,3 @@
-include ':mspek', ':androsample', 'kotlinsample'
+include ':mspek'
+//include ':androsample'
+//include ':kotlinsample'
