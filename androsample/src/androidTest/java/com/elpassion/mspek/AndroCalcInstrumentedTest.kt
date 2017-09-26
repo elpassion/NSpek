@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 import com.elpassion.mspek.MiniSpek.o
 import com.elpassion.mspek.MiniSpek.mspek
 
-@RunWith(com.elpassion.mspek.MiniSpekJUnitRunner::class)
+@RunWith(com.elpassion.mspek.MiniSpekRunner::class)
 class AndroCalcInstrumentedTest {
 
     init {

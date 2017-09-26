@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm", "1.1.50")
 }
 
-group = "com.github.langara.mspek"
+group = "com.github.elpassion.mspek"
 version = "0.0.1"
 
 repositories {
