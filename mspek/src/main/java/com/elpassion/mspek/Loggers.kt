@@ -20,11 +20,11 @@ internal fun logToList(list: MutableList<TestInfo>) = fun(info: TestInfo) { list
 internal fun logToConsole(info: TestInfo) = info.run {
     when (state) {
         STARTED -> println(name)
-        SUCCESS -> println("SUCCESS.($location)")
+        SUCCESS -> println("SUCCESS.($location)\n")
         FAILURE -> {
             println("FAILURE.($location)")
             println("BECAUSE.($failureLocation)")
-            println(failureCause)
+            println("$failureCause\n")
         }
         null -> println(info.toString()) // unknown state; just print everything we know
     }
