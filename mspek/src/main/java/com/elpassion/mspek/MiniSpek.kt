@@ -21,11 +21,17 @@ object MiniSpek {
         }
     }
 
-    infix fun String.o(code: () -> Unit) = currentUserCodeLocation in finishedTests || throw try {
-        log.start(this, currentUserCodeLocation)
-        code()
-        TestEnd()
+    infix fun String.o(code: () -> Unit) {
+        if (currentUserCodeLocation !in finishedTests) {
+            throw try {
+                log.start(this, currentUserCodeLocation)
+                code()
+                TestEnd()
+            } catch (e: TestEnd) {
+                e
+            } catch (e: Throwable) {
+                TestEnd(e)
+            }
+        }
     }
-    catch (e: TestEnd) { e }
-    catch (e: Throwable) { TestEnd(e) }
 }
