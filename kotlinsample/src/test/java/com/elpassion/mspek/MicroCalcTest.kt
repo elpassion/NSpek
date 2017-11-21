@@ -1,9 +1,10 @@
 package com.elpassion.mspek
-import org.junit.runner.RunWith
-import com.elpassion.mspek.MiniSpek.o
-import com.elpassion.mspek.MiniSpek.mspek
 
-@RunWith(MiniSpekJUnitRunner::class)
+import com.elpassion.mspek.MiniSpek.mspek
+import com.elpassion.mspek.MiniSpek.o
+import org.junit.runner.RunWith
+
+@RunWith(MiniSpekRunner::class)
 class MicroCalcTest {
 
     init {

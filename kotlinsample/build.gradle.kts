@@ -13,12 +13,10 @@ application {
 repositories {
     jcenter()
     mavenCentral()
-    maven { url = URI("https://jitpack.io") }
 }
 
 dependencies {
     implementation(kotlin("stdlib", "1.1.50"))
     implementation("junit:junit:4.12")
-    testImplementation("com.github.elpassion:MiniSpek:master-SNAPSHOT")
+    testImplementation(project(":mspek"))
 }
-
