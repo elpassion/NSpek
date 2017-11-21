@@ -3,7 +3,6 @@ import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.kotlin
 
 plugins {
-//    `build-scan`
     `maven-publish`
     kotlin("jvm", "1.1.50")
 }
@@ -22,14 +21,6 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.8.0")
 }
 
-//buildScan {
-//    setLicenseAgreementUrl("https://gradle.com/terms-of-service")
-//    setLicenseAgree("yes")
-//
-//    publishAlways()
-//}
-
-// Create sources Jar from main kotlin sources
 val sourcesJar by tasks.creating(Jar::class) {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles sources JAR"
