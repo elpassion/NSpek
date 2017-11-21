@@ -20,7 +20,7 @@ class MiniSpekRunner(testClass: Class<*>) : Runner() {
         testClass.declaredMethods
                 .filter { it.getAnnotation(Test::class.java) !== null }
                 .forEach { it.invoke(instance) }
-        tree.info.state = TestState.SUCCESS
+        tree.info = tree.info.copy(state = TestState.SUCCESS)
         rootDescription.addChild(createDescriptions(tree, testClass.name))
     }
 
@@ -63,7 +63,7 @@ class MiniSpekRunner(testClass: Class<*>) : Runner() {
         } else {
             Description.createTestDescription(testSuite, testBranch.info.name)
         }.apply {
-            testBranch.info.description = this
+            testBranch.info = testBranch.info.copy(description = this)
         }
     }
 }

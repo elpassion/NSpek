@@ -42,26 +42,33 @@ internal class logToTree(private val tree: TestTree) : MLog {
         if (current === tree && tree.info.state === null) {
             check(info.state == STARTED)
             tree.reset(info)
-        }
-        else when (info.state) {
+        } else {
+            when (info.state) {
 
-            STARTED -> {
-                val subTree = current.subtrees.find { it.info.location == info.location }
-                if (subTree !== null)
-                    currentSubTree = subTree
-                else {
-                    currentSubTree = TestTree(info.copy())
-                    current.subtrees.add(currentSubTree)
+                STARTED -> {
+                    val subTree = current.subtrees.find { it.info.location == info.location }
+                    if (subTree !== null)
+                        currentSubTree = subTree
+                    else {
+                        currentSubTree = TestTree(info.copy())
+                        current.subtrees.add(currentSubTree)
+                    }
                 }
-            }
 
-            SUCCESS, FAILURE -> {
-                check(info.location == current.info.location)
-                current.info.applyExistentFrom(info)
-                currentSubTree = tree // start again from the top
-            }
+                SUCCESS, FAILURE -> {
+                    check(info.location == current.info.location)
+                    current.info = TestInfo(name = info.name ?: current.info.name,
+                            location = info.location ?: current.info.location,
+                            state = info.state,
+                            failureLocation = info.failureLocation ?: current.info.failureLocation,
+                            failureCause = info.failureCause ?: current.info.failureCause,
+                            description = info.description ?: current.info.description)
+                    currentSubTree = tree // start again from the top
+                }
 
-            null -> throw IllegalStateException("Unknown test state")
+                null -> throw IllegalStateException("Unknown test state")
+            }
         }
     }
 }
+
