@@ -63,5 +63,25 @@ Test different nested scenarios without any boilerplate code.
     }
 ```
 
-details: https://jitpack.io/#elpassion/NSpek
+JitPack: https://jitpack.io/#elpassion/NSpek
+
+### Details:
+
+For each test method a new instance of the test class will be created.
+We belive that tests isolation should be by default, but if you really need to share some
+objects between tests you can create them outside of the test class.
+
+Also if you need at any point to perform a tear down action, you have to wrap your code with try finally, example:
+
+```
+try {
+    "add some elements to the list" o {
+        list.add(4)
+
+        assertEquals(5, list.size)
+    }
+} finally {
+    // tear down action
+}
+```
 

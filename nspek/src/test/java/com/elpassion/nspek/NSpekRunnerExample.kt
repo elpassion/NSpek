@@ -9,9 +9,13 @@ class NSpekRunnerExample {
 
     @Test
     fun NSpekMethodContext.test() {
-        "subtest" o {
-            assertTrue(true)
-            extractedAssertion()
+        try {
+            "subtest" o {
+                assertTrue(true)
+                extractedAssertion()
+            }
+        } finally {
+            
         }
         assertTrue(true)
     }
