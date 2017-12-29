@@ -1,55 +1,50 @@
-# MiniSpek
-Mini tool for testing with syntax similar to Spek, but shorter.
+# NSpek
+A tool for testing with syntax similar to Spek, but shorter.
 Test different nested scenarios without any boilerplate code.
-It is a fork of [μSpek](https://github.com/langara/USpek),
-but without so much focus on keeping codebase small.
 
 ### Example
 ```kotlin
 
     @Test
-    fun MiniSpekTest() {
+    fun NSpekMethodContext.`basic nspek tests`() {
     
-        mspek("basic mini spek tests") {
+        "create some mutable list" o {
 
-            "create some mutable list" o {
+            val list = mutableListOf(0, 1, 2)
 
-                val list = mutableListOf(0, 1, 2)
+            assertEquals(3, list.size)
 
-                assertEquals(3, list.size)
+            "check list details" o {
+                assertEquals(0, list[0])
+                assertEquals(1, list[1])
+                assertEquals(2, list[2])
+            }
 
-                "check list details" o {
-                    assertEquals(0, list[0])
-                    assertEquals(1, list[1])
+            "add some elements to the list" o {
+                list.add(3)
+                list.add(4)
+
+                assertEquals(3, list[3])
+                assertEquals(4, list[4])
+                assertEquals(5, list.size)
+            }
+
+            "remove middle element from the list" o {
+                list.removeAt(1)
+
+                "try to check not existing element - it should fail" o {
                     assertEquals(2, list[2])
                 }
 
-                "add some elements to the list" o {
-                    list.add(3)
-                    list.add(4)
-
-                    assertEquals(3, list[3])
-                    assertEquals(4, list[4])
-                    assertEquals(5, list.size)
+                // this will still work even when the sub test above fails
+                "correctly check the list after removing middle element" o {
+                    assertEquals(2, list.size)
+                    assertEquals(0, list[0])
+                    assertEquals(2, list[1])
                 }
 
-                "remove middle element from the list" o {
-                    list.removeAt(1)
-
-                    "try to check not existing element - it should fail" o {
-                        assertEquals(2, list[2])
-                    }
-
-                    // this will still work even when the sub test above fails
-                    "correctly check the list after removing middle element" o {
-                        assertEquals(2, list.size)
-                        assertEquals(0, list[0])
-                        assertEquals(2, list[1])
-                    }
-
-                    "use custom assertion to generate some error" o {
-                        list.size eq 666 // it should report error with correct line number
-                    }
+                "use custom assertion to generate some error" o {
+                    list.size eq 666 // it should report error with correct line number
                 }
             }
         }
@@ -64,9 +59,9 @@ but without so much focus on keeping codebase small.
     }
    
     dependencies {
-        testImplementation 'com.github.elpassion:MiniSpek:master-SNAPSHOT'
+        testImplementation 'com.github.elpassion:NSpek:master-SNAPSHOT'
     }
 ```
 
-details: https://jitpack.io/#elpassion/MiniSpek
+details: https://jitpack.io/#elpassion/NSpek
 

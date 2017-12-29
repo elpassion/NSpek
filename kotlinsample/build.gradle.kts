@@ -7,7 +7,7 @@ plugins {
 }
 
 application {
-    mainClassName = "com.elpassion.mspek.MainKt"
+    mainClassName = "com.elpassion.nspek.MainKt"
 }
 
 repositories {
@@ -18,5 +18,5 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib", "1.1.50"))
     implementation("junit:junit:4.12")
-    testImplementation(project(":mspek"))
+    testImplementation(project(":nspek"))
 }
