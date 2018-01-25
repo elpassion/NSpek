@@ -4,7 +4,8 @@ Test different nested scenarios without any boilerplate code.
 
 ### Example
 ```kotlin
-
+@RunWith(NSpekRunner::class)
+class MyTest {
     @Test
     fun NSpekMethodContext.`basic nspek tests`() {
     
@@ -49,7 +50,7 @@ Test different nested scenarios without any boilerplate code.
             }
         }
     }
-
+}
 ```
 
 ### Building with JitPack
