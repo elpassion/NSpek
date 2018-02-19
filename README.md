@@ -2,6 +2,9 @@
 A tool for testing with syntax similar to Spek, but shorter.
 Test different nested scenarios without any boilerplate code.
 
+It is inspired by original idea from:
+https://github.com/langara/USpek
+
 ### Example
 ```kotlin
 @RunWith(NSpekRunner::class)
