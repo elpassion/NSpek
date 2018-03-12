@@ -2,7 +2,6 @@ package com.elpassion.nspek
 
 import org.junit.runner.Description
 import org.junit.runner.Runner
-import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunNotifier
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -30,33 +29,6 @@ class NSpekRunner(testClass: Class<*>) : Runner() {
 
     companion object {
         var customNotifiers = listOf<(Notification) -> Unit>(LoggingNotifier())
-    }
-}
-
-private class LoggingNotifier : (Notification) -> Unit {
-    override fun invoke(it: Notification) {
-        when (it) {
-            is Notification.Start -> println(it.description.displayName)
-            is Notification.End -> println("SUCCESS.(${it.location})\n")
-            is Notification.Failure -> {
-                println("FAILURE.(${it.location})")
-                println("BECAUSE.(${it.cause.causeLocation})")
-                println("${it.cause}\n")
-            }
-        }
-    }
-}
-
-private class JunitNotifierWrapper(private val notifier: RunNotifier) : (Notification) -> Unit {
-    override fun invoke(notification: Notification) {
-        when (notification) {
-            is Notification.Start -> notifier.fireTestStarted(notification.description)
-            is Notification.Failure -> {
-                notifier.fireTestFailure(Failure(notification.description, notification.cause))
-                notifier.fireTestFinished(notification.description)
-            }
-            is Notification.End -> notifier.fireTestFinished(notification.description)
-        }
     }
 }
 
@@ -106,9 +78,9 @@ private fun runMethodTests(method: Method, testClass: Class<*>): List<TestBranch
     return descriptionsNames
 }
 
-data class TestBranch(val names: List<String>, val throwable: Throwable? = null, val location: CodeLocation)
+private data class TestBranch(val names: List<String>, val throwable: Throwable? = null, val location: CodeLocation)
 
-sealed class InfiniteMap : MutableMap<String, InfiniteMap> by mutableMapOf() {
+private sealed class InfiniteMap : MutableMap<String, InfiniteMap> by mutableMapOf() {
     data class Branch(val throwable: Throwable? = null, val description: Description, val location: CodeLocation) : InfiniteMap()
     class Root : InfiniteMap()
 }
@@ -159,35 +131,3 @@ private fun Description.addAllChildren(descriptions: List<Description>) = apply 
         addChild(it)
     }
 }
-
-sealed class Notification {
-    abstract val description: Description
-    abstract val location: CodeLocation
-
-    data class Start(override val description: Description, override val location: CodeLocation) : Notification()
-    data class End(override val description: Description, override val location: CodeLocation) : Notification()
-    data class Failure(override val description: Description, override val location: CodeLocation, val cause: Throwable) : Notification()
-}
-
-class NSpekMethodContext {
-    val finishedTests = mutableSetOf<CodeLocation>()
-    val names = mutableListOf<String>()
-
-    infix fun String.o(code: NSpekMethodContext.() -> Unit) {
-        if (!finishedTests.contains(currentUserCodeLocation)) {
-            names.add(this)
-            try {
-                code()
-                finishedTests.add(currentUserCodeLocation)
-                throw TestEnd(codeLocation = currentUserCodeLocation)
-            } catch (ex: TestEnd) {
-                throw ex
-            } catch (ex: Throwable) {
-                finishedTests.add(currentUserCodeLocation)
-                throw TestEnd(ex, codeLocation = currentUserCodeLocation)
-            }
-        }
-    }
-}
-
-class TestEnd(cause: Throwable? = null, val codeLocation: CodeLocation) : RuntimeException(cause)
