@@ -1,7 +1,6 @@
 package com.elpassion.nspek
 
-class NSpekMethodContext {
-    val finishedTests = mutableSetOf<CodeLocation>()
+class NSpekMethodContext(private val finishedTests: MutableSet<CodeLocation>) {
     val names = mutableListOf<String>()
 
     infix fun String.o(code: NSpekMethodContext.() -> Unit) {
