@@ -60,15 +60,16 @@ private fun runMethodsTests(testClass: Class<*>): List<TestBranch> {
 
 private fun runMethodTests(method: Method, testClass: Class<*>): List<TestBranch> {
     val descriptionsNames = mutableListOf<TestBranch>()
-    val collectedNames = mutableSetOf<CodeLocation>()
+    val finishedTestNames = mutableListOf<String>()
     while (true) {
-        val nSpekContext = NSpekMethodContext(collectedNames)
+        val nSpekContext = NSpekMethodContext(finishedTestNames)
         try {
             method.invoke(testClass.newInstance(), nSpekContext)
             break
         } catch (e: InvocationTargetException) {
             val cause = e.cause
             if (cause is TestEnd) {
+                finishedTestNames.add(nSpekContext.names.joinToString())
                 descriptionsNames.add(TestBranch(nSpekContext.names, cause.cause, location = cause.codeLocation))
             } else {
                 throw cause!!

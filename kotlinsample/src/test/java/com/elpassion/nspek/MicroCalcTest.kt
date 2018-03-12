@@ -35,6 +35,8 @@ class MicroCalcTest {
                 sut.result eq 115
             }
 
+            testSomeAdding(sut)
+
             "mutate SUT and check multiplyBy" o {
                 sut.result = 3
 
@@ -42,11 +44,34 @@ class MicroCalcTest {
                 sut.result eq 9
                 sut.multiplyBy(4)
                 sut.result eq 36
+
+                testSomeAdding(sut)
             }
 
             "assure that SUT is intact by any of sub tests above" o {
                 sut.result eq 10
             }
+        }
+    }
+
+    fun NSpekMethodContext.testSomeAdding(calc: MicroCalc) {
+        val start = calc.result
+        "add 5 to $start" o {
+            calc.add(5)
+            val afterAdd5 = start + 5
+            "result should be $afterAdd5" o { calc.result eq afterAdd5 }
+
+            "add 7 more" o {
+                calc.add(7)
+                val afterAdd5Add7 = afterAdd5 + 7
+                "result should be $afterAdd5Add7" o { calc.result eq afterAdd5Add7 }
+            }
+        }
+
+        "substract 3" o {
+            calc.add(-3)
+            val afterSub3 = start - 3
+            "result should be $afterSub3" o { calc.result eq afterSub3 }
         }
 
     }
