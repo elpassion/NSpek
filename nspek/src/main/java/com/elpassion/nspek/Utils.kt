@@ -20,3 +20,5 @@ private val Array<StackTraceElement>.userCodeFrame: StackTraceElement
     get() {
         return get(indexOfFirst { it.methodName == "o" && it.className == NSpekMethodContext::class.java.canonicalName } + 1)
     }
+
+fun createTestPath(testNames:List<String>): String = testNames.joinToString("|")

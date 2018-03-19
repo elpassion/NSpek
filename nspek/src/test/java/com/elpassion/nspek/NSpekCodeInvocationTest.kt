@@ -12,7 +12,7 @@ class NSpekCodeInvocationTest {
 
     @Before
     fun setUp() {
-        runClassTests(ExampleTestClass::class.java)
+        runClassTests(ExampleTestClass::class.java, ALL_TEST_ALLOWED_SELECTOR)
     }
 
     @Test

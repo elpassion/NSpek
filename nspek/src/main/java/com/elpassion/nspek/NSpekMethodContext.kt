@@ -1,10 +1,12 @@
 package com.elpassion.nspek
 
-class NSpekMethodContext(private val finishedTestNames: MutableList<String>) {
+class NSpekMethodContext(private val finishedTestNames: MutableList<String>,
+                         private val testSelector: TestSelector) {
     val names = mutableListOf<String>()
 
     infix fun String.o(code: NSpekMethodContext.() -> Unit) {
-        if (!finishedTestNames.contains((names + this).joinToString())) {
+        val testPath = createTestPath()
+        if (!finishedTestNames.contains(testPath) && testSelector(testPath)) {
             names.add(this)
             try {
                 code()
@@ -16,4 +18,6 @@ class NSpekMethodContext(private val finishedTestNames: MutableList<String>) {
             }
         }
     }
+
+    private fun String.createTestPath() = createTestPath(names + this)
 }

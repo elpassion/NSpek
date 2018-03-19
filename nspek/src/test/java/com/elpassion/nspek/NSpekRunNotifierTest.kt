@@ -8,28 +8,28 @@ class NSpekRunNotifierTest {
 
     @Test
     fun shouldNotEmitClassTestNotification() {
-        val second = runClassTests(ExampleTestClass::class.java).second
+        val second = runClassTests(ExampleTestClass::class.java, ALL_TEST_ALLOWED_SELECTOR).second
         Assert.assertTrue(second.none { it is Notification.Start && it.description.displayName == ExampleTestClass::class.java.name })
         Assert.assertTrue(second.none { it is Notification.End && it.description.displayName == ExampleTestClass::class.java.name })
     }
 
     @Test
     fun shouldNotMethodTestNotification() {
-        val second = runClassTests(ExampleTestClass::class.java).second
+        val second = runClassTests(ExampleTestClass::class.java, ALL_TEST_ALLOWED_SELECTOR).second
         Assert.assertTrue(second.none { it is Notification.Start && it.description.displayName == "test" })
         Assert.assertTrue(second.none { it is Notification.End && it.description.displayName == "test" })
     }
 
     @Test
     fun shouldStartSubTest() {
-        val second = runClassTests(ExampleTestClass::class.java).second
+        val second = runClassTests(ExampleTestClass::class.java, ALL_TEST_ALLOWED_SELECTOR).second
         Assert.assertTrue(second.any { it is Notification.Start && it.description.displayName == "sub-test(test)" })
         Assert.assertTrue(second.any { it is Notification.End && it.description.displayName == "sub-test(test)" })
     }
 
     @Test
     fun shouldStartNestedSubTest() {
-        val second = runClassTests(ExampleTestClass::class.java).second
+        val second = runClassTests(ExampleTestClass::class.java, ALL_TEST_ALLOWED_SELECTOR).second
         Assert.assertTrue(second.none { it is Notification.Start && it.description.displayName == "sub-suite" })
         Assert.assertTrue(second.none { it is Notification.End && it.description.displayName == "sub-suite" })
 
@@ -39,7 +39,7 @@ class NSpekRunNotifierTest {
 
     @Test
     fun shouldHaveFailingNestedTest() {
-        val second = runClassTests(ExampleTestClass::class.java).second
+        val second = runClassTests(ExampleTestClass::class.java, ALL_TEST_ALLOWED_SELECTOR).second
         Assert.assertTrue(second.any { it is Notification.Start && it.description.displayName == "nested-failing-subtest(sub-suite)" })
         Assert.assertTrue(second.any { it is Notification.Failure && it.description.displayName == "nested-failing-subtest(sub-suite)" && it.cause is AssertionError })
     }

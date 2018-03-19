@@ -11,9 +11,26 @@ class NSpekRunner(testClass: Class<*>) : Runner() {
     private val rootDescription: Description
 
     init {
-        val (rootDescription, runResult) = runClassTests(testClass)
+        val testSelector = createTestSelector()
+        val (rootDescription, runResult) = runClassTests(testClass, testSelector)
         this.rootDescription = rootDescription
         this.notifications = runResult
+    }
+
+    private fun createTestSelector(): TestSelector {
+        val property = System.getProperty("testPath")
+        return if (property == null) {
+            ALL_TEST_ALLOWED_SELECTOR
+        } else {
+            createRestrictingTestSelector(property)
+        }
+    }
+
+    private fun createRestrictingTestSelector(property: String): (String) -> Boolean {
+        return { testPath ->
+            val allowedPath = property.split("|")
+            allowedPath.containsAll(testPath.split("|").take(allowedPath.size))
+        }
     }
 
     override fun getDescription(): Description = rootDescription
@@ -32,19 +49,19 @@ class NSpekRunner(testClass: Class<*>) : Runner() {
     }
 }
 
-fun runClassTests(testClass: Class<*>): Pair<Description, List<Notification>> {
+fun runClassTests(testClass: Class<*>, testSelector: (String) -> Boolean): Pair<Description, List<Notification>> {
     require(testClass.methods.filter { it.getAnnotation(Test::class.java) != null }.isNotEmpty()) { "At least one method should be annotated with com.elpassion.nspek.Test" }
-    val descriptions = runMethodsTests(testClass).map { testBranch ->
+    val descriptions = runMethodsTests(testClass, testSelector).map { testBranch ->
         testBranch.copy(names = listOf(testClass.name) + testBranch.names)
     }
     val descriptionTree = descriptions.toTree()
     return descriptionTree.getDescriptions().first() to descriptionTree.getNotifications()
 }
 
-private fun runMethodsTests(testClass: Class<*>): List<TestBranch> {
+private fun runMethodsTests(testClass: Class<*>, testSelector: (String) -> Boolean): List<TestBranch> {
     return testClass.declaredMethods.filter { it.getAnnotation(Test::class.java) != null }.flatMap { method ->
         try {
-            val results = runMethodTests(method, testClass).map { testBranch ->
+            val results = runMethodTests(method, testClass, testSelector).map { testBranch ->
                 testBranch.copy(names = listOf(method.name) + testBranch.names)
             }
             if (results.isNotEmpty()) {
@@ -58,18 +75,18 @@ private fun runMethodsTests(testClass: Class<*>): List<TestBranch> {
     }
 }
 
-private fun runMethodTests(method: Method, testClass: Class<*>): List<TestBranch> {
+private fun runMethodTests(method: Method, testClass: Class<*>, testSelector: (String) -> Boolean): List<TestBranch> {
     val descriptionsNames = mutableListOf<TestBranch>()
     val finishedTestNames = mutableListOf<String>()
     while (true) {
-        val nSpekContext = NSpekMethodContext(finishedTestNames)
+        val nSpekContext = NSpekMethodContext(finishedTestNames, testSelector)
         try {
             method.invoke(testClass.newInstance(), nSpekContext)
             break
         } catch (e: InvocationTargetException) {
             val cause = e.cause
             if (cause is TestEnd) {
-                finishedTestNames.add(nSpekContext.names.joinToString())
+                finishedTestNames.add(createTestPath(nSpekContext.names))
                 descriptionsNames.add(TestBranch(nSpekContext.names, cause.cause, location = cause.codeLocation))
             } else {
                 throw cause!!
@@ -132,3 +149,7 @@ private fun Description.addAllChildren(descriptions: List<Description>) = apply 
         addChild(it)
     }
 }
+
+typealias TestSelector = (String) -> Boolean
+
+val ALL_TEST_ALLOWED_SELECTOR: TestSelector = { true }

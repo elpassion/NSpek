@@ -7,13 +7,13 @@ class NSpekErrorHandlingTest {
 
     @Test
     fun shouldNotCrashWhenThrowingExceptionFromRootOfTestMethod() {
-        runClassTests(ExampleTest::class.java)
+        runClassTests(ExampleTest::class.java, ALL_TEST_ALLOWED_SELECTOR)
     }
 
     @Test
     fun shouldThrowIllegalArgumentExceptionWhenEmptyClassGiven() {
         try {
-            runClassTests(EmptyTestClass::class.java)
+            runClassTests(EmptyTestClass::class.java, ALL_TEST_ALLOWED_SELECTOR)
             Assert.assertTrue(false)
         } catch (ex: Exception) {
             Assert.assertEquals(IllegalArgumentException::class.java, ex.javaClass)
